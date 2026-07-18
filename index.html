@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NITECH Mobile Web | Robotics Engineering Core</title>
+    <style>
+        /* --- BRAND DESIGN & ACCENTS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-app: #070b12;
+            --surface: #101726;
+            --surface-hover: #172237;
+            --border: rgba(255, 255, 255, 0.08);
+            --electric-blue: #00f2fe;
+            --neon-green: #39ff14;
+            --text-main: #ffffff;
+            --text-secondary: #94a3b8;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            padding-bottom: 80px; /* Space for mobile nav bar */
+            font-size: 15px;
+        }
+
+        /* --- APP HEADER WITH BLOOM EFFECT --- */
+        .app-header {
+            background: rgba(16, 23, 38, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Geometric Logo Mark */
+        .logo-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            width: 24px;
+            height: 24px;
+        }
+        .matrix-dot {
+            background: var(--electric-blue);
+            border-radius: 2px;
+        }
+        .matrix-dot:nth-child(4) {
+            background: var(--neon-green);
+        }
+
+        .brand-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: titleBloom 1.2s ease-out forwards;
+        }
+
+        @keyframes titleBloom {
+            0% {
+                opacity: 0;
+                filter: blur(5px);
+                text-shadow: 0 0 0px var(--electric-blue);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+                text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+            }
+        }
+
+        .brand-text span {
+            color: var(--electric-blue);
+        }
+
+        /* --- STATUS METRIC PANEL --- */
+        .status-container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, var(--surface), #152035);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.05);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-green));
+            width: 35%; /* Default completed state */
+            height: 100%;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- COURSE STACK SHEETS --- */
+        .section-heading {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--electric-blue);
+            letter-spacing: 1px;
+            max-width: 600px;
+            margin: 1rem auto 0 auto;
+        }
+
+        .course-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding: 0 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .course-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .course-block:active {
+            background: var(--surface-hover);
+            transform: scale(0.98);
+        }
+
+        .block-info {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .block-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .block-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .block-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Custom Styled Native Checkbox Button */
+        .check-container {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .check-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0; left: 0;
+            width: 24px; height: 24px;
+            background-color: rgba(255,255,255,0.05);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .check-container input:checked ~ .checkmark {
+            background-color: var(--electric-blue);
+            border-color: var(--electric-blue);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 7px; top: 3px;
+            width: 6px; height: 11px;
+            border: solid #000;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg);
+        }
+
+        .check-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* --- MOBILE BOTTOM NAVIGATION --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0;
+            width: 100%;
+            background: rgba(16, 23, 38, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-item.active {
+            color: var(--electric-blue);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .nav-icon.circle { border-radius: 50%; }
+        .nav-icon.triangle {
+            width: 0; height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 18px solid currentColor;
+            border-top: none;
+            background: none;
+        }
+
+        /* --- SUBMISSION SYSTEM --- */
+        .workspace-form {
+            max-width: 600px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .form-card h4 {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .input-box {
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: white;
+            outline: none;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-box:focus {
+            border-color: var(--electric-blue);
+        }
+
+        .action-btn {
+            width: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-green));
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY TOP APP BAR -->
+    <div class="app-header">
+        <div class="app-logo">
+            <div class="logo-matrix">
+                <div class="matrix-dot"></div>
+                <div class="matrix-dot"></div>
+                <div class="matrix-dot"></div>
+                <div class="matrix-dot"></div>
+            </div>
+            <div class="brand-text">NITECH <span>Mobile Web</span></div>
+        </div>
+    </div>
+
+    <!-- CORE DASHBOARD PROGRESS TRACKER -->
+    <div class="status-container">
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">Robotics Track Progress</span>
+                <span id="progressPercent" style="font-weight: 700; color: var(--electric-blue);">33%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progressBar" class="progress-bar-fill"></div>
+            </div>
+            <div class="metric-row">
+                <span>Completed modules: <strong id="completedCount">2</strong></span>
+                <span>Total Modules: <strong>6</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN STUDY SYLLABUS STACK -->
+    <div class="section-heading">Foundations & Requirements</div>
+    <div class="course-stack">
+        <!-- Module 1 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Requirement 01 • Mathematics</div>
+                <div class="block-title">Kinematics & Coordinate Planes</div>
+                <div class="block-desc">Linear algebra matrices, rotation vectors, and calculating end-effector workspace coordinates.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" checked data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Requirement 02 • Electronics</div>
+                <div class="block-title">Actuators, Drivers & Multimeters</div>
+                <div class="block-desc">Testing MOSFET gates, tracking continuous current draw on DC motors, and protecting H-bridges.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" checked data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Requirement 03 • Computation</div>
+                <div class="block-title">Firmware & Microcontrollers</div>
+                <div class="block-desc">Writing embedded Python and C loops to manage sensor pulse-width modulation (PWM) inputs.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="section-heading">Professional Robotics Engineering</div>
+    <div class="course-stack">
+        <!-- Module 4 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Specialization 04 • Vision</div>
+                <div class="block-title">Computer Vision & Object Tracking</div>
+                <div class="block-desc">Real-time object mapping using distance sensors, spatial coordinates, and contour path arrays.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <!-- Module 5 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Specialization 05 • Middleware</div>
+                <div class="block-title">ROS2 (Robot Operating System)</div>
+                <div class="block-desc">Configuring communication pathways between separate sensors, motors, and central processing units.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <!-- Module 6 -->
+        <div class="course-block">
+            <div class="block-info">
+                <div class="block-tag">Specialization 06 • Simulation</div>
+                <div class="block-title">Kinematic Physics Sandboxes</div>
+                <div class="block-desc">Testing dynamic stress metrics, joint loads, and torque limits in a virtual space before hardware layout assembly.</div>
+            </div>
+            <label class="check-container">
+                <input type="checkbox" class="sync-check" data-weight="1">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- LOGBOOK SYNC REGISTRY -->
+    <div class="workspace-form">
+        <div class="form-card">
+            <h4>Sync Simulation Logbook</h4>
+            <form id="logForm">
+                <input type="text" id="logTitle" class="input-box" placeholder="Project Workspace Title (e.g., NITECH Rover V1)" required>
+                <textarea id="logText" class="input-box" rows="3" placeholder="Enter hardware layout configurations or structural math problems..." required></textarea>
+                <button type="submit" class="action-btn">Log Progress Data</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SYSTEM MOBILE APP BOTTOM NAVIGATION BAR BAR -->
+    <div class="bottom-nav">
+        <button class="nav-item active">
+            <div class="nav-icon"></div>
+            <span>Modules</span>
+        </button>
+        <button class="nav-item">
+            <div class="nav-icon circle"></div>
+            <span>Labs</span>
+        </button>
+        <button class="nav-item">
+            <div class="nav-icon triangle"></div>
+            <span>Profile</span>
+        </button>
+    </div>
+
+    <!-- SYSTEM FUNCTION JAVASCRIPT LAYER -->
+    <script>
+        // Track, update and compute total study progress status dynamically
+        const checkboxes = document.querySelectorAll('.sync-check');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const completedCountEl = document.getElementById('completedCount');
+
+        function recalculateMetrics() {
+            let completed = 0;
+            const total = checkboxes.length;
+
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    completed++;
+                }
+            });
+
+            const targetPercentage = Math.round((completed / total) * 100);
+            
+            // Adjust visual DOM states instantly
+            progressBar.style.width = targetPercentage + '%';
+            progressPercent.textContent = targetPercentage + '%';
+            completedCountEl.textContent = completed;
+        }
+
+        // Loop execution listener over checkboxes
+        checkboxes.forEach(box => {
+            box.addEventListener('change', recalculateMetrics);
+        });
+
+        // Form submission capture event handler
+        document.getElementById('logForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const projectTitle = document.getElementById('logTitle').value;
+            
+            if(projectTitle) {
+                alert(`NITECH Database Synced:\nSimulation log data for "${projectTitle}" has been written to the core system logbook parameters successfully.`);
+                this.reset();
+            }
+        });
+    </script>
+</body>
+</html>
