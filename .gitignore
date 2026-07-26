@@ -1,39 +1,23 @@
-# Prerequisites
-*.d
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Mobile & IDE temporary configs
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
+# Log files and temporary exports
+*.log
+tmp/
+temp/
+*.tmp
 # Executables
 *.exe
 *.out
